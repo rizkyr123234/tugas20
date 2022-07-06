@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
     const wheres = []
     const values = []
     //pencarian 
+    
     if (req.query.nama) {
         wheres.push(`Nama like '%' || ? || '%' `) // trik buat like 
         values.push(req.query.nama)
