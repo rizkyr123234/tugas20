@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>edit bio</title>
+</head>
+<body>
+    <form action="'" method="post">
+        <% item.forEach(item=> {%>      
+            ID<input type="text" name="id" id="" value="<%=item.ID%>" readonly> <br> 
+            Nama <input type="text" name="nama" id="" value="<%=item.Nama%>"> <br>
+            tinggi<input type="text" name="tinggi" id="" value="<%=item.Tinggi%>"><br>
+            tanggal lahir <input type="date" name="date" id="" value="<%=item.tanggal_lahir%>"> <br>
+            status<select name="status" id="" >
+                <option <%=item.status_menikah==1?"selected":null%>>menikah </option>
+                <option <%=item.status_menikah==0?"selected":null%>>jomblo</option>
+                </select> <br>
+            berat<input type='text' name="berat" id="" value="<%= item.berat_badan%>"> <br>
+            <button type="submit">Tambah</button>
+            <%}) %>
+    </form>
+</body>
+</html>
