@@ -2,7 +2,6 @@ const express = require('express')
 const sqlite = require('sqlite3').verbose()
 const bodyParser = require('body-parser')
 const path = require('path')
-const { rmSync } = require('fs')
 const moment = require('moment')
 var app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -28,39 +27,42 @@ app.get('/', (req, res) => {
     }
 
     if (req.query.tinggi) {
-        wheres.push(`Tinggi = ?`)
+        wheres.push(` Tinggi = ? `)
         values.push(parseInt(req.query.tinggi))
 
     }
 
     if (req.query.berat) {
-        wheres.push(`berat_badan =?`)
+        wheres.push(` berat_badan =? `)
         values.push(parseInt(req.query.berat))
 
     }
 
     if (req.query.status) {
         const status = req.query.status == 'nikah'? 1 : 0
-        wheres.push(`status_menikah=?`)
+        wheres.push(` status_menikah=?`)
         values.push(status)
-        console.log(values)
+       
     }
 
     let sqlC = `select count(*) AS total from tugas20 `
     if (wheres.length > 0) {
-        sqlC += `WHERE ${wheres.join('and')}`
+        sqlC += ` WHERE ${wheres.join(' and')}`
     }
 
+    console.log(sqlC, 'ini yg pertama')
     db.all(sqlC,values, (err, rows) => {
         const pages = Math.ceil(rows[0].total / limit)
-     // console.log('ini sql', sqlC,values)
 
         sqlC = `select * from tugas20 `
         if (wheres.length > 0) {
-            sqlC += `WHERE ${wheres.join('and')}`
+            sqlC += `WHERE ${wheres.join(' and')}`
         }
         sqlC += ' LIMIT ? OFFSET ?'
-        db.all(sqlC,values, [limit, offset], (err, rows) => {
+        values.push(limit,offset)
+        console.log(values,'ini value')
+        console.log(sqlC)
+        db.all(sqlC, values, (err, rows) => {
           //console.log('ini yg ada limitnya', sqlC)
             if (err) return 'gagal mas '
             res.render('menu', { rows, pages, page, moment })
