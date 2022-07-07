@@ -5,10 +5,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>edit bio</title>
+    <style>
+        input[type=text],[type = date], select {
+  width: 75%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+button[type=submit] {
+  width: 7%;
+  background-color: blue;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button[type=submit]:hover {
+  background-color: blue;
+}
+div {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+    </style>
 </head>
 <body>
+    <h1>Edit Data</h1>
     <form action="'" method="post">
-        <% item.forEach(item=> {%>      
             ID<input type="text" name="id" id="" value="<%=item.ID%>" readonly> <br> 
             Nama <input type="text" name="nama" id="" value="<%=item.Nama%>"> <br>
             tinggi<input type="text" name="tinggi" id="" value="<%=item.Tinggi%>"><br>
@@ -19,7 +48,7 @@
                 </select> <br>
             berat<input type='text' name="berat" id="" value="<%= item.berat_badan%>"> <br>
             <button type="submit">Tambah</button>
-            <%}) %>
+           
     </form>
 </body>
 </html>

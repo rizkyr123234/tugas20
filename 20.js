@@ -15,13 +15,20 @@ let db = new sqlite.Database('./tugas20.db', sqlite.OPEN_READWRITE, (err) => {
 }
 )
 app.get('/', (req, res) => {
+    const url = req.url == '/' ? '/?page=1' : req.url // buat nge bug kalo pengen balik lagi 
     const page = req.query.page || 1
+   
+    console.log(page,'ini pagenya')
     const limit = 3 // limit tuh buat nampilin bebebrapa data saja 
     const offset = (page - 1) * limit // rumus buat nyari offset dari mas rubi 
     const wheres = []
     const values = []
-    //pencarian 
     
+    //pencarian 
+    if(req.query.id){
+        wheres.push(`ID = ?`)
+        values.push(parseInt(req.query.id))
+    }
     if (req.query.nama) {
         wheres.push(`Nama like '%' || ? || '%' `) // trik buat like 
         values.push(req.query.nama)
@@ -45,10 +52,23 @@ app.get('/', (req, res) => {
         values.push(status)
        
     }
+    if(req.query.date && req.query.date2 ){
+        wheres.push(` tanggal_lahir BETWEEN ? AND ?`)
+        values.push(req.query.date,req.query.date2)
+    }
+     else if(req.query.date){
+        wheres.push(` tanggal_lahir >?`)
+        values.push(req.query.date)
+    } else if(req.query.date2){
+        wheres.push(` tanggal_lahir <?`)
+        values.push(req.query.date2)
+    }
+   
+   
 
     let sqlC = `select count(*) AS total from tugas20 `
     if (wheres.length > 0) {
-        sqlC += ` WHERE ${wheres.join(' and')}`
+        sqlC += ` WHERE ${wheres.join(' and ')}`
     }
 
     console.log(sqlC, 'ini yg pertama')
@@ -66,7 +86,7 @@ app.get('/', (req, res) => {
         db.all(sqlC, values, (err, rows) => {
           //console.log('ini yg ada limitnya', sqlC)
             if (err) return 'gagal mas '
-            res.render('menu', { rows, pages, page, moment })
+            res.render('menu', { rows, pages, page, moment, url,query:req.query})
         })
     })
 })
@@ -101,9 +121,10 @@ app.get('/delet/:id', (req, res) => {
 })
 
 app.get('/edit/:id', (req, res) => {
-    db.all(`select * from tugas20`, (err, rows) => {
+    db.all(`select * from tugas20 WHERE ID=?`,[req.params.id], (err, rows) => {
         if (err) return 'gagal mas '
-        res.render('edit', { item: rows })
+        console.log(rows)
+        res.render('edit', { item: rows[0]})
 
         app.post('/edit/:id', (req, res) => {
             let id = parseInt(req.body.id)
